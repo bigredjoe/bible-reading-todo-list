@@ -1,1 +1,136 @@
-console.log('hi');
+/**
+ * @param {String} HTML representing a single element
+ * @return {Element}
+ */
+function htmlToElement(html) {
+    var template = document.createElement('template');
+    html = html.trim(); // Never return a text node of whitespace as the result
+    template.innerHTML = html;
+    return template.content.firstChild;
+}
+
+/**
+ * @param {String} HTML representing any number of sibling elements
+ * @return {NodeList} 
+ */
+function htmlToElements(html) {
+    var template = document.createElement('template');
+    template.innerHTML = html;
+    return template.content.childNodes;
+}
+
+function accordanceLink(reference){
+	return "accord:///;read?ref="+ encodeURIComponent(reference);
+}
+
+function thingsLink(data) {
+	return "things:///add-json?data=" + encodeURIComponent(JSON.stringify(data));
+}
+
+function build() {
+  let bible = {
+    "Genesis" : 50,
+"Exodus" : 40,
+"Leviticus" : 27,
+"Numbers" : 36,
+"Deuteronomy" : 34,
+"Joshua" : 24,
+"Judges" : 21,
+"Ruth" : 4,
+"1 Samuel": 31,
+"2 Samuel" : 24,
+"1 Kings" : 22,
+"2 Kings" : 25,
+"1 Chronicles" : 29,
+"2 Chronicles" : 36,
+"Ezra" : 10,
+"Nehemiah" : 13,
+"Esther" : 10,
+"Job" : 42,
+"Psalms" : 150,
+"Proverbs" : 31,
+"Ecclesiastes" : 12,
+"Song of Songs" : 8,
+"Isaiah" : 66,
+"Jeremiah" : 52,
+"Lamentations" : 5,
+"Ezekiel" : 48,
+"Daniel" : 12,
+"Hosea" : 14,
+"Joel" : 3,
+"Amos" : 9,
+"Obadiah" : 1,
+"Jonah" : 4,
+"Micah" : 7,
+"Nahum" : 3,
+"Habakkuk" : 3,
+"Zephaniah" : 3,
+"Haggai" : 2,
+"Zechariah" : 14,
+"Malachi" : 4,
+"Matthew" : 28,
+"Mark" : 16,
+"Luke" : 24,
+"John" : 21,
+"Acts" : 28,
+"Romans" : 16,
+"1 Corinthians" : 16,
+"2 Corinthians" : 13,
+"Galatians" : 6,
+"Ephesians" : 6,
+"Philippians" : 4,
+"Colossians" : 4,
+"1 Thessalonians": 5,
+"2 Thessalonians": 3,
+"1 Timothy": 6,
+"2 Timothy": 4,
+"Titus" : 3,
+"Philemon" : 1,
+"Hebrews" : 13,
+"James" : 5,
+"1 Peter" : 5,
+"2 Peter" : 3,
+"1 John" : 5,
+"2 John" : 1,
+"3 John" : 1,
+"Jude" : 1,
+"Revelation" : 22
+  };
+	
+	var thingsItems = [];
+	
+	var body = document.getElementById("list");
+
+	for(var key in bible) {
+		if (bible.hasOwnProperty(key)) {
+			var chapterItems = [];
+
+			var lastChapter = bible[key];
+			for (var chapter = 1; chapter <= lastChapter; chapter++){
+				var reference = key + " " + chapter;
+				chapterItems.push({
+        "type": "to-do",
+        "attributes": {
+          "title": reference,
+					"notes": accordanceLink(reference)
+        }
+      });
+			}
+			thingsItems.push({
+        "type": "project",
+        "attributes": {
+          "title": key,
+					"items": chapterItems,
+					"when": "someday",
+					"tags": ["Bible Reading"]
+        }
+      });
+		}
+		
+	}
+
+				body.appendChild(htmlToElement("<li><a href='"+ thingsLink(thingsItems) +"'>Bible Reading</a></li>"));
+ 
+}
+
+build();
